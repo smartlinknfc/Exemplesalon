@@ -1,197 +1,1416 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Beauty Salon</title>
+<title>ÉLÉGANCE — Beauty Salon</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #fffaf8;
-            color: #333;
-        }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
-        header {
-            background: white;
-            padding: 20px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #b76e79;
-        }
+html{
+    scroll-behavior:smooth;
+}
 
-        nav a {
-            margin-left: 25px;
-            text-decoration: none;
-            color: #333;
-        }
+body{
+    font-family:'DM Sans',sans-serif;
+    background:#faf7f5;
+    color:#201b1b;
+    overflow-x:hidden;
+}
 
-        .hero {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
-            background: #f8e8e8;
-        }
+:root{
+    --pink:#c58b91;
+    --dark:#201b1b;
+    --cream:#faf7f5;
+    --white:#ffffff;
+    --soft:#f1e6e3;
+}
 
-        .hero h1 {
-            font-size: 52px;
-            margin-bottom: 20px;
-        }
+h1,h2,h3{
+    font-family:'Playfair Display',serif;
+}
 
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
+a{
+    text-decoration:none;
+    color:inherit;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 14px 30px;
-            background: #b76e79;
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-        }
+/* LOADER */
 
-        .services {
-            padding: 70px 7%;
-            text-align: center;
-        }
+.loader{
+    position:fixed;
+    inset:0;
+    background:#201b1b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    animation:loaderOut 1s ease 2s forwards;
+}
 
-        .services h2 {
-            font-size: 36px;
-            margin-bottom: 40px;
-        }
+.loader h1{
+    color:white;
+    font-size:42px;
+    letter-spacing:8px;
+    animation:pulse 1.3s infinite alternate;
+}
 
-        .service-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-        }
+@keyframes pulse{
+    from{opacity:.3;transform:scale(.97)}
+    to{opacity:1;transform:scale(1)}
+}
 
-        .service {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-        }
+@keyframes loaderOut{
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}
 
-        .service h3 {
-            margin-bottom: 10px;
-            color: #b76e79;
-        }
+/* NAVBAR */
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            background: #333;
-            color: white;
-        }
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    padding:24px 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:1000;
+    transition:.4s;
+}
 
-        @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 38px;
-            }
+.navbar.scrolled{
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(15px);
+    padding:16px 7%;
+    box-shadow:0 10px 40px rgba(0,0,0,.08);
+}
 
-            nav {
-                display: none;
-            }
-        }
-    </style>
+.logo{
+    font-family:'Playfair Display',serif;
+    font-size:25px;
+    letter-spacing:4px;
+    font-weight:bold;
+}
+
+.nav-links{
+    display:flex;
+    gap:35px;
+    list-style:none;
+}
+
+.nav-links a{
+    font-size:14px;
+    position:relative;
+}
+
+.nav-links a::after{
+    content:"";
+    position:absolute;
+    bottom:-7px;
+    left:0;
+    width:0;
+    height:2px;
+    background:var(--pink);
+    transition:.3s;
+}
+
+.nav-links a:hover::after{
+    width:100%;
+}
+
+.nav-btn{
+    padding:12px 22px;
+    background:var(--dark);
+    color:white;
+    border-radius:30px;
+    font-size:13px;
+    transition:.3s;
+}
+
+.nav-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+/* HERO */
+
+.hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:120px 7% 70px;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:550px;
+    height:550px;
+    background:#ead2d2;
+    border-radius:50%;
+    right:-180px;
+    top:-120px;
+    filter:blur(5px);
+    opacity:.7;
+}
+
+.hero-content{
+    width:55%;
+    position:relative;
+    z-index:2;
+    animation:heroIn 1.2s ease;
+}
+
+@keyframes heroIn{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.small-title{
+    text-transform:uppercase;
+    letter-spacing:5px;
+    font-size:12px;
+    color:var(--pink);
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.hero h1{
+    font-size:clamp(55px,7vw,100px);
+    line-height:.95;
+    margin-bottom:30px;
+}
+
+.hero h1 span{
+    color:var(--pink);
+    font-style:italic;
+}
+
+.hero p{
+    max-width:500px;
+    line-height:1.8;
+    color:#6c6262;
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:15px;
+    align-items:center;
+}
+
+.primary-btn{
+    background:var(--dark);
+    color:white;
+    padding:17px 30px;
+    border-radius:40px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:.35s;
+}
+
+.primary-btn:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 35px rgba(0,0,0,.2);
+}
+
+.secondary-btn{
+    padding:16px 25px;
+    border:1px solid #cfc4c1;
+    border-radius:40px;
+    transition:.3s;
+}
+
+.secondary-btn:hover{
+    background:white;
+    transform:translateY(-3px);
+}
+
+.hero-card{
+    position:absolute;
+    right:9%;
+    bottom:12%;
+    width:250px;
+    padding:25px;
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:25px;
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+    z-index:4;
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-15px)}
+}
+
+.hero-card .stars{
+    color:#b77b80;
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.hero-card strong{
+    font-size:25px;
+    display:block;
+}
+
+.hero-card small{
+    color:#777;
+}
+
+/* SECTION */
+
+section{
+    padding:110px 7%;
+}
+
+.section-head{
+    text-align:center;
+    margin-bottom:60px;
+}
+
+.section-head .small-title{
+    margin-bottom:12px;
+}
+
+.section-head h2{
+    font-size:52px;
+}
+
+.section-head p{
+    max-width:550px;
+    margin:15px auto 0;
+    color:#777;
+    line-height:1.7;
+}
+
+/* SERVICES */
+
+.services{
+    background:white;
+}
+
+.service-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.service{
+    padding:40px 30px;
+    border:1px solid #eee5e2;
+    border-radius:25px;
+    transition:.4s;
+    position:relative;
+    overflow:hidden;
+}
+
+.service::before{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    background:#f5dfdf;
+    border-radius:50%;
+    top:-40px;
+    right:-40px;
+    transition:.5s;
+}
+
+.service:hover::before{
+    transform:scale(4);
+    opacity:.35;
+}
+
+.service:hover{
+    transform:translateY(-12px);
+    box-shadow:0 25px 60px rgba(70,40,40,.1);
+}
+
+.service-number{
+    position:relative;
+    z-index:2;
+    font-size:12px;
+    color:#999;
+    margin-bottom:45px;
+}
+
+.service h3{
+    position:relative;
+    z-index:2;
+    font-size:27px;
+    margin-bottom:12px;
+}
+
+.service p{
+    position:relative;
+    z-index:2;
+    color:#777;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.price{
+    position:relative;
+    z-index:2;
+    margin-top:25px;
+    font-weight:bold;
+    color:var(--pink);
+}
+
+/* ABOUT */
+
+.about{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+    align-items:center;
+}
+
+.about-image{
+    height:570px;
+    border-radius:30px;
+    background:
+    linear-gradient(135deg,#dfc4c4,#f6e9e6,#c9a8a8);
+    position:relative;
+    overflow:hidden;
+}
+
+.about-image::after{
+    content:"BEAUTY";
+    position:absolute;
+    font-family:'Playfair Display';
+    font-size:120px;
+    color:rgba(255,255,255,.35);
+    transform:rotate(-90deg);
+    right:-75px;
+    top:190px;
+}
+
+.about-box{
+    position:absolute;
+    bottom:25px;
+    left:25px;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    width:210px;
+    box-shadow:0 20px 50px rgba(0,0,0,.12);
+}
+
+.about-box strong{
+    font-size:35px;
+    font-family:'Playfair Display';
+}
+
+.about-text h2{
+    font-size:55px;
+    margin-bottom:25px;
+}
+
+.about-text p{
+    color:#6f6666;
+    line-height:1.9;
+    margin-bottom:20px;
+}
+
+.features{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.feature{
+    padding:15px;
+    background:#f8f1ef;
+    border-radius:12px;
+    font-size:14px;
+}
+
+/* STATS */
+
+.stats{
+    background:var(--dark);
+    color:white;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    text-align:center;
+    padding-top:70px;
+    padding-bottom:70px;
+}
+
+.stat h3{
+    font-size:50px;
+    color:#e0b8b8;
+}
+
+.stat p{
+    color:#b9afaf;
+    margin-top:5px;
+}
+
+/* GALLERY */
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.gallery-item{
+    height:300px;
+    border-radius:22px;
+    overflow:hidden;
+    position:relative;
+    background:linear-gradient(135deg,#ead3d3,#c49b9b);
+    transition:.5s;
+}
+
+.gallery-item:nth-child(2){
+    background:linear-gradient(135deg,#d7c1b7,#f0ddd5);
+}
+
+.gallery-item:nth-child(3){
+    background:linear-gradient(135deg,#c7b1b1,#eadede);
+}
+
+.gallery-item:nth-child(4){
+    background:linear-gradient(135deg,#ead8ce,#b9968d);
+}
+
+.gallery-item:nth-child(5){
+    background:linear-gradient(135deg,#dbc4c4,#caa5a5);
+}
+
+.gallery-item:nth-child(6){
+    background:linear-gradient(135deg,#eee1dc,#d1b3a9);
+}
+
+.gallery-item:hover{
+    transform:scale(1.03);
+}
+
+.gallery-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(transparent,rgba(0,0,0,.55));
+    display:flex;
+    align-items:flex-end;
+    padding:25px;
+    color:white;
+    opacity:0;
+    transition:.4s;
+}
+
+.gallery-item:hover .gallery-overlay{
+    opacity:1;
+}
+
+/* BOOKING */
+
+.booking{
+    background:#f2e6e3;
+}
+
+.booking-container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    border-radius:30px;
+    padding:50px;
+    box-shadow:0 25px 70px rgba(50,30,30,.1);
+}
+
+.booking-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:15px;
+    border:1px solid #e5dcda;
+    border-radius:12px;
+    outline:none;
+    font-family:inherit;
+    background:#fff;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:var(--pink);
+    box-shadow:0 0 0 3px rgba(197,139,145,.12);
+}
+
+.booking-submit{
+    width:100%;
+    border:0;
+    padding:17px;
+    border-radius:40px;
+    background:var(--dark);
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.booking-submit:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+/* REVIEWS */
+
+.reviews{
+    background:white;
+}
+
+.review-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.review{
+    padding:35px;
+    background:#faf7f5;
+    border-radius:22px;
+    transition:.3s;
+}
+
+.review:hover{
+    transform:translateY(-8px);
+}
+
+.review-stars{
+    color:#bd8589;
+    margin-bottom:20px;
+}
+
+.review p{
+    line-height:1.8;
+    color:#655d5d;
+    margin-bottom:25px;
+}
+
+.review strong{
+    font-family:'Playfair Display';
+}
+
+/* CTA */
+
+.cta{
+    text-align:center;
+    background:
+    radial-gradient(circle at center,#ead1d1,transparent 60%),
+    #f8eeeb;
+}
+
+.cta h2{
+    font-size:60px;
+    max-width:700px;
+    margin:auto;
+}
+
+.cta p{
+    color:#706666;
+    margin:20px auto 30px;
+}
+
+/* FOOTER */
+
+footer{
+    background:#201b1b;
+    color:white;
+    padding:60px 7% 30px;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:50px;
+}
+
+.footer-brand h2{
+    font-size:30px;
+    letter-spacing:4px;
+}
+
+.footer-brand p{
+    color:#aaa;
+    max-width:350px;
+    line-height:1.8;
+    margin-top:15px;
+}
+
+footer h4{
+    margin-bottom:18px;
+}
+
+footer a{
+    display:block;
+    color:#aaa;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.copyright{
+    border-top:1px solid #3b3535;
+    margin-top:40px;
+    padding-top:25px;
+    color:#777;
+    font-size:13px;
+}
+
+/* REVEAL ANIMATION */
+
+.reveal{
+    opacity:0;
+    transform:translateY(50px);
+    transition:1s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero-content{
+        width:100%;
+    }
+
+    .hero-card{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:60px;
+    }
+
+    .service-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .about{
+        grid-template-columns:1fr;
+    }
+
+    .about-image{
+        height:400px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:40px;
+    }
+
+    .gallery{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .review-grid{
+        grid-template-columns:1fr;
+    }
+
+    .footer-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    section{
+        padding:80px 5%;
+    }
+
+    .navbar{
+        padding:18px 5%;
+    }
+
+    .hero{
+        padding:130px 5% 70px;
+    }
+
+    .hero h1{
+        font-size:50px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .section-head h2,
+    .about-text h2{
+        font-size:40px;
+    }
+
+    .service-grid,
+    .booking-grid,
+    .gallery{
+        grid-template-columns:1fr;
+    }
+
+    .booking-container{
+        padding:25px;
+    }
+
+    .gallery-item{
+        height:270px;
+    }
+
+    .cta h2{
+        font-size:42px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
-    <div class="logo">BEAUTY SALON</div>
+<!-- LOADER -->
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#services">Services</a>
-        <a href="#booking">Rendez-vous</a>
-    </nav>
+<div class="loader">
+    <h1>ÉLÉGANCE</h1>
+</div>
+
+<!-- NAVIGATION -->
+
+<header class="navbar" id="navbar">
+
+    <div class="logo">ÉLÉGANCE</div>
+
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+    </ul>
+
+    <a href="#booking" class="nav-btn">Book Now</a>
+
 </header>
 
+<!-- HERO -->
+
 <section class="hero" id="home">
-    <div>
-        <h1>Feel Beautiful</h1>
+
+    <div class="hero-content">
+
+        <div class="small-title">
+            Beauty • Wellness • Elegance
+        </div>
+
+        <h1>
+            Your beauty,<br>
+            <span>our passion.</span>
+        </h1>
 
         <p>
-            Professional beauty services made for you.
+            Discover a refined beauty experience where
+            elegance, relaxation and professional care
+            come together.
         </p>
 
-        <a href="#booking" class="btn">
-            Book an Appointment
-        </a>
+        <div class="hero-buttons">
+
+            <a href="#booking" class="primary-btn">
+                Book Your Appointment →
+            </a>
+
+            <a href="#services" class="secondary-btn">
+                Explore Services
+            </a>
+
+        </div>
+
     </div>
+
+    <div class="hero-card">
+
+        <div class="stars">★★★★★</div>
+
+        <strong>4.9/5</strong>
+
+        <small>
+            Loved by 500+ clients
+        </small>
+
+    </div>
+
 </section>
 
-<section class="services" id="services">
+<!-- SERVICES -->
 
-    <h2>Our Services</h2>
+<section class="services reveal" id="services">
 
-    <div class="service-container">
+    <div class="section-head">
+
+        <div class="small-title">
+            What We Do
+        </div>
+
+        <h2>Our Signature Services</h2>
+
+        <p>
+            Everything you need to look and feel your absolute best.
+        </p>
+
+    </div>
+
+    <div class="service-grid">
 
         <div class="service">
+
+            <div class="service-number">01</div>
+
             <h3>Hair</h3>
-            <p>Hair styling and treatments</p>
+
+            <p>
+                Professional cuts, styling, coloring
+                and treatments.
+            </p>
+
+            <div class="price">
+                From €35
+            </div>
+
         </div>
 
         <div class="service">
+
+            <div class="service-number">02</div>
+
             <h3>Nails</h3>
-            <p>Manicure and pedicure</p>
+
+            <p>
+                Elegant manicure, pedicure and
+                premium nail care.
+            </p>
+
+            <div class="price">
+                From €25
+            </div>
+
         </div>
 
         <div class="service">
+
+            <div class="service-number">03</div>
+
             <h3>Makeup</h3>
-            <p>Professional makeup</p>
+
+            <p>
+                Professional makeup for events,
+                weddings and special occasions.
+            </p>
+
+            <div class="price">
+                From €45
+            </div>
+
         </div>
 
         <div class="service">
+
+            <div class="service-number">04</div>
+
             <h3>Facial</h3>
-            <p>Beauty and skincare treatments</p>
+
+            <p>
+                Relaxing skincare treatments designed
+                for glowing skin.
+            </p>
+
+            <div class="price">
+                From €40
+            </div>
+
         </div>
 
     </div>
 
 </section>
 
-<section id="booking" class="services">
+<!-- ABOUT -->
 
-    <h2>Book Your Appointment</h2>
+<section class="about reveal" id="about">
+
+    <div class="about-image">
+
+        <div class="about-box">
+
+            <strong>10+</strong>
+
+            <p>
+                Years of beauty expertise
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="about-text">
+
+        <div class="small-title">
+            About ÉLÉGANCE
+        </div>
+
+        <h2>
+            Beauty is an experience.
+        </h2>
+
+        <p>
+            Welcome to ÉLÉGANCE, a modern beauty salon
+            created for women who appreciate quality,
+            comfort and attention to detail.
+        </p>
+
+        <p>
+            Our team combines professional expertise
+            with a relaxing atmosphere to make every
+            appointment special.
+        </p>
+
+        <div class="features">
+
+            <div class="feature">
+                ✓ Professional Team
+            </div>
+
+            <div class="feature">
+                ✓ Premium Products
+            </div>
+
+            <div class="feature">
+                ✓ Relaxing Atmosphere
+            </div>
+
+            <div class="feature">
+                ✓ Personalized Care
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- STATS -->
+
+<section class="stats reveal">
+
+    <div class="stat">
+        <h3>10+</h3>
+        <p>Years Experience</p>
+    </div>
+
+    <div class="stat">
+        <h3>500+</h3>
+        <p>Happy Clients</p>
+    </div>
+
+    <div class="stat">
+        <h3>20+</h3>
+        <p>Beauty Services</p>
+    </div>
+
+    <div class="stat">
+        <h3>4.9</h3>
+        <p>Average Rating</p>
+    </div>
+
+</section>
+
+<!-- GALLERY -->
+
+<section class="reveal" id="gallery">
+
+    <div class="section-head">
+
+        <div class="small-title">
+            Our Work
+        </div>
+
+        <h2>Beauty Gallery</h2>
+
+        <p>
+            A glimpse into the ÉLÉGANCE experience.
+        </p>
+
+    </div>
+
+    <div class="gallery">
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Hair Styling
+            </div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Nail Art
+            </div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Makeup
+            </div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Hair Color
+            </div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Beauty Care
+            </div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="gallery-overlay">
+                Salon Experience
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- BOOKING -->
+
+<section class="booking reveal" id="booking">
+
+    <div class="section-head">
+
+        <div class="small-title">
+            Appointment
+        </div>
+
+        <h2>Book Your Visit</h2>
+
+        <p>
+            Choose your service and preferred date.
+        </p>
+
+    </div>
+
+    <div class="booking-container">
+
+        <div class="booking-grid">
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    placeholder="Your name"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Phone</label>
+
+                <input
+                    type="tel"
+                    placeholder="+212 ..."
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Service</label>
+
+                <select>
+
+                    <option>Select a service</option>
+                    <option>Hair</option>
+                    <option>Nails</option>
+                    <option>Makeup</option>
+                    <option>Facial</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Date</label>
+
+                <input type="date">
+
+            </div>
+
+        </div>
+
+        <button
+            class="booking-submit"
+            onclick="bookingMessage()"
+        >
+            Continue to Available Times →
+        </button>
+
+    </div>
+
+</section>
+
+<!-- REVIEWS -->
+
+<section class="reviews reveal" id="reviews">
+
+    <div class="section-head">
+
+        <div class="small-title">
+            Client Love
+        </div>
+
+        <h2>What Our Clients Say</h2>
+
+    </div>
+
+    <div class="review-grid">
+
+        <div class="review">
+
+            <div class="review-stars">
+                ★★★★★
+            </div>
+
+            <p>
+                Absolutely beautiful salon. The team
+                was professional and the result was
+                even better than I expected.
+            </p>
+
+            <strong>
+                — Sarah M.
+            </strong>
+
+        </div>
+
+        <div class="review">
+
+            <div class="review-stars">
+                ★★★★★
+            </div>
+
+            <p>
+                The atmosphere is amazing and the
+                service was excellent. Definitely
+                coming back again.
+            </p>
+
+            <strong>
+                — Emma R.
+            </strong>
+
+        </div>
+
+        <div class="review">
+
+            <div class="review-stars">
+                ★★★★★
+            </div>
+
+            <p>
+                Finally found a salon where I feel
+                completely comfortable. Highly
+                recommended!
+            </p>
+
+            <strong>
+                — Lina K.
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CTA -->
+
+<section class="cta reveal">
+
+    <h2>
+        Ready for your next beauty moment?
+    </h2>
 
     <p>
-        Choose your preferred service, date and available time.
+        Your perfect appointment is only one click away.
     </p>
 
-    <br>
-
-    <a href="#" class="btn">
-        Book Now
+    <a href="#booking" class="primary-btn">
+        Book an Appointment →
     </a>
 
 </section>
 
+<!-- FOOTER -->
+
 <footer>
-    <p>© 2026 Beauty Salon. All rights reserved.</p>
+
+    <div class="footer-grid">
+
+        <div class="footer-brand">
+
+            <h2>ÉLÉGANCE</h2>
+
+            <p>
+                A modern beauty destination dedicated
+                to elegance, confidence and self-care.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h4>Explore</h4>
+
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#gallery">Gallery</a>
+
+        </div>
+
+        <div>
+
+            <h4>Contact</h4>
+
+            <a href="#">WhatsApp</a>
+            <a href="#">Instagram</a>
+            <a href="#">Location</a>
+            <a href="#booking">Book Appointment</a>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+
+        © 2026 ÉLÉGANCE Beauty Salon — All Rights Reserved.
+
+    </div>
+
 </footer>
+
+<script>
+
+/* NAVBAR */
+
+window.addEventListener("scroll", function(){
+
+    const navbar =
+        document.getElementById("navbar");
+
+    if(window.scrollY > 50){
+        navbar.classList.add("scrolled");
+    }else{
+        navbar.classList.remove("scrolled");
+    }
+
+});
+
+/* SCROLL REVEAL */
+
+const reveals =
+    document.querySelectorAll(".reveal");
+
+function revealOnScroll(){
+
+    reveals.forEach(function(element){
+
+        const windowHeight =
+            window.innerHeight;
+
+        const elementTop =
+            element.getBoundingClientRect().top;
+
+        if(elementTop < windowHeight - 100){
+
+            element.classList.add("active");
+
+        }
+
+    });
+
+}
+
+window.addEventListener("scroll", revealOnScroll);
+
+revealOnScroll();
+
+/* BOOKING MESSAGE */
+
+function bookingMessage(){
+
+    alert(
+        "Booking system coming next! We will connect this form to the real available appointment times."
+    );
+
+}
+
+</script>
 
 </body>
 </html>
