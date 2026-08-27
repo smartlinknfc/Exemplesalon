@@ -2067,9 +2067,11 @@ async function startBooking(){
     bookingButton.innerText = "CONFIRMING...";
 
     try{
-        /* Re-check availability immediately before saving. */
-        const checkResponse = await fetch(
-            `${SUPABASE_URL}/rest/v1/rpc/get_available_times_for_service`,
+
+        // Supabase automatically chooses A1/A2/A3, B1/B2/B3,
+        // C1/C2/C3 or D1/D2/D3 according to the selected service.
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/rpc/book_appointment`,
             {
                 method:"POST",
                 headers:{
@@ -2077,75 +2079,64 @@ async function startBooking(){
                     "apikey":SUPABASE_KEY
                 },
                 body:JSON.stringify({
+                    p_customer_name: name,
+                    p_phone: phone,
+                    p_service: service,
                     p_date: date,
-                    p_service: service
+                    p_time: selectedTime
                 })
             }
         );
 
-        if(!checkResponse.ok){
-            throw new Error(await checkResponse.text());
-        }
-
-        const slots = await checkResponse.json();
-        const selectedSlot = slots.find(
-            slot => String(slot.appointment_time).startsWith(selectedTime.slice(0,5))
-        );
-
-        if(!selectedSlot || Number(selectedSlot.available_count || 0) <= 0){
-            selectedTime = "";
-            await loadAvailableTimes();
-            alert("Sorry, this time was just fully booked. Please choose another time.");
-            return;
-        }
-
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/appointments`,
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    "apikey":SUPABASE_KEY,
-                    "Prefer":"return=minimal"
-                },
-                body:JSON.stringify({
-                    customer_name:name,
-                    phone:phone,
-                    service:service,
-                    appointment_date:date,
-                    appointment_time:selectedTime,
-                    status:"pending"
-                })
-            }
-        );
+        const responseText = await response.text();
 
         if(!response.ok){
-            const errorText = await response.text();
-            throw new Error(errorText);
+            let message = responseText;
+            try{
+                const parsed = JSON.parse(responseText);
+                message = parsed.message || parsed.error || responseText;
+            }catch(e){}
+
+            throw new Error(message || "Booking failed.");
         }
 
-        alert("Appointment confirmed successfully! 💕");
+        const staffMember = responseText.replace(/^"|"$/g, "");
+
+        alert(
+            `Appointment confirmed successfully! 💕\n\n` +
+            `${service}\n` +
+            `${date}\n` +
+            `${formatTime(selectedTime)}\n` +
+            `Staff: ${staffMember}`
+        );
 
         document.getElementById("customerName").value = "";
         document.getElementById("customerPhone").value = "";
         serviceInput.value = "";
         dateInput.value = "";
+
         selectedTime = "";
+
         timePicker.classList.remove("show");
         timeGrid.innerHTML = "";
+
         bookingButton.disabled = false;
         bookingButton.innerText = "CONTINUE TO AVAILABLE TIMES →";
 
     }catch(error){
+
         console.error(error);
+
         alert(
             "Booking Error: " +
             (error?.message || error || "Unknown error")
         );
+
         bookingButton.disabled = false;
         bookingButton.innerText = "CONFIRM APPOINTMENT →";
     }
 }
+
 </script>
 
 </body>
