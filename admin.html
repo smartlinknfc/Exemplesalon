@@ -83,7 +83,7 @@ function showLogin(){$("dashboard").classList.add("hidden");$("loginPage").class
 function showDashboard(){if(!session()?.access_token)return showLogin();$("loginPage").classList.add("hidden");$("dashboard").classList.remove("hidden");load()}
 
 function queryForFilter(){
- let u=`${SUPABASE_URL}/rest/v1/appointments?select=id,customer_name,phone,service,appointment_date,appointment_time,status&order=appointment_date.asc,appointment_time.asc`;
+ let u=`${SUPABASE_URL}/rest/v1/appointments?select=id,customer_name,phone,service,appointment_date,appointment_time,status,staff_member&order=appointment_date.asc,appointment_time.asc`;
  const mode=$("dateMode").value,st=$("statusFilter").value;
  if(mode==="today")u+=`&appointment_date=eq.${todayLocal()}`;
  if(mode==="specific"&&$("dateFilter").value)u+=`&appointment_date=eq.${$("dateFilter").value}`;
@@ -179,7 +179,7 @@ function renderStaff(rows){
    section.innerHTML=`<h3 style="font:600 24px 'Playfair Display';margin:8px 0 10px">${esc(service)}</h3>`;
    const row=document.createElement("div");row.className="staff-grid";
    names.forEach((name,i)=>{
-     const mine=serviceRows.filter((_,idx)=>idx%3===i);
+     const mine=serviceRows.filter(a=>a.staff_member===name);
      const box=document.createElement("div");box.className="staff";
      box.innerHTML=`<div class="staff-head"><h3>${name}</h3><span class="badge">${mine.length} appointments</span></div>
      ${mine.length?mine.map(a=>`<div class="staff-event"><b>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.customer_name||"")}</b><small>${esc(service)} · ${esc(a.appointment_date||"")}</small></div>`).join(""):'<div class="no-event">No appointments</div>'}`;
