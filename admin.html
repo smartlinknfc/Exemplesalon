@@ -53,7 +53,7 @@ th,td{text-align:left;padding:14px;border-bottom:1px solid #eee5e1;font-size:12p
 <h2 class="section-title">Weekly Calendar</h2>
 <section class="calendar"><div id="week" class="week"></div></section>
 
-<h2 class="section-title">Staff Schedule · 3 Staff</h2>
+<h2 class="section-title">Staff Schedule · By Service</h2>
 <section id="staffGrid" class="staff-grid"></section>
 
 <section class="table-wrap"><table><thead><tr><th>DATE</th><th>TIME</th><th>CLIENT</th><th>PHONE</th><th>SERVICE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
@@ -110,9 +110,34 @@ function renderCalendar(rows){
  const dayRows=rows.filter(a=>a.appointment_date===ds);box.innerHTML=`<div class="day-head"><small>${new Date(ds+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})}</small><strong>${fmt(ds)}</strong></div><div class="day-list">${dayRows.length?dayRows.map(a=>`<div class="event"><strong>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.service||"")}</strong><span>${esc(a.customer_name||"")} · ${esc(a.status||"pending")}</span></div>`).join(""):'<div class="no-event">No appointments</div>'}</div>`;$("week").appendChild(box)})
 }
 function renderStaff(rows){
- const names=["Staff 1","Staff 2","Staff 3"],grid=$("staffGrid");grid.innerHTML="";
- names.forEach((name,i)=>{const box=document.createElement("div");box.className="staff";const mine=rows.filter((_,idx)=>idx%3===i);
- box.innerHTML=`<div class="staff-head"><h3>${name}</h3><span class="badge">${mine.length} appointments</span></div>${mine.length?mine.map(a=>`<div class="staff-event"><b>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.customer_name||"")}</b><small>${esc(a.service||"")} · ${esc(a.appointment_date||"")}</small></div>`).join(""):'<div class="no-event">No appointments</div>'}`;grid.appendChild(box)})
+ const serviceStaff={
+  "Hair Styling":["A1","A2","A3"],
+  "Nail Care":["B1","B2","B3"],
+  "Makeup":["C1","C2","C3"],
+  "Facial Treatment":["D1","D2","D3"]
+ };
+ const groups={};
+ Object.keys(serviceStaff).forEach(s=>groups[s]=[]);
+ rows.forEach((a)=>{
+   const service=a.service||"";
+   if(groups[service]) groups[service].push(a);
+ });
+ const grid=$("staffGrid");grid.innerHTML="";
+ Object.entries(serviceStaff).forEach(([service,names])=>{
+   const serviceRows=groups[service]||[];
+   const section=document.createElement("div");
+   section.style.gridColumn="1 / -1";
+   section.innerHTML=`<h3 style="font:600 24px 'Playfair Display';margin:8px 0 10px">${esc(service)}</h3>`;
+   const row=document.createElement("div");row.className="staff-grid";
+   names.forEach((name,i)=>{
+     const mine=serviceRows.filter((_,idx)=>idx%3===i);
+     const box=document.createElement("div");box.className="staff";
+     box.innerHTML=`<div class="staff-head"><h3>${name}</h3><span class="badge">${mine.length} appointments</span></div>
+     ${mine.length?mine.map(a=>`<div class="staff-event"><b>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.customer_name||"")}</b><small>${esc(service)} · ${esc(a.appointment_date||"")}</small></div>`).join(""):'<div class="no-event">No appointments</div>'}`;
+     row.appendChild(box);
+   });
+   section.appendChild(row);grid.appendChild(section);
+ });
 }
 async function stats(){
  async function c(extra=""){const r=await fetch(`${SUPABASE_URL}/rest/v1/appointments?select=id${extra}`,{headers:{...headers(),"Prefer":"count=exact"}});const cr=r.headers.get("content-range");if(cr&&cr.includes("/"))return Number(cr.split("/")[1]);const d=await r.json().catch(()=>[]);return d.length}
