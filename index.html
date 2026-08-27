@@ -653,6 +653,77 @@ a{
 }
 
 /* =========================
+   AVAILABLE TIMES
+========================= */
+
+.time-picker{
+    display:none;
+    margin-top:4px;
+    grid-column:1 / -1;
+}
+
+.time-picker.show{
+    display:block;
+}
+
+.time-picker-label{
+    display:block;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:.5px;
+    margin-bottom:10px;
+}
+
+.time-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.time-slot{
+    min-height:46px;
+    border:1px solid #e4d9d5;
+    background:white;
+    color:#4c4442;
+    border-radius:4px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:12px;
+    transition:.25s;
+}
+
+.time-slot:hover:not(:disabled){
+    border-color:var(--rose);
+    color:var(--rose);
+    transform:translateY(-2px);
+}
+
+.time-slot.selected{
+    background:var(--rose);
+    border-color:var(--rose);
+    color:white;
+}
+
+.time-slot:disabled{
+    background:#f4f1f0;
+    color:#aaa;
+    border-color:#e8e3e1;
+    cursor:not-allowed;
+}
+
+.time-status{
+    margin-top:10px;
+    font-size:11px;
+    color:#817773;
+}
+
+@media(max-width:700px){
+    .time-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+/* =========================
    REVIEWS
 ========================= */
 
@@ -1505,14 +1576,12 @@ footer a:hover{
 
         <div class="booking-grid">
 
-
             <div class="form-group">
 
-                <label>
-                    FULL NAME
-                </label>
+                <label>FULL NAME</label>
 
                 <input
+                    id="customerName"
                     type="text"
                     placeholder="Your full name"
                 >
@@ -1522,11 +1591,10 @@ footer a:hover{
 
             <div class="form-group">
 
-                <label>
-                    PHONE NUMBER
-                </label>
+                <label>PHONE NUMBER</label>
 
                 <input
+                    id="customerPhone"
                     type="tel"
                     placeholder="+212 ..."
                 >
@@ -1536,31 +1604,19 @@ footer a:hover{
 
             <div class="form-group">
 
-                <label>
-                    SERVICE
-                </label>
+                <label>SERVICE</label>
 
-                <select>
+                <select id="serviceSelect">
 
-                    <option>
-                        Select a service
-                    </option>
+                    <option value="">Select a service</option>
 
-                    <option>
-                        Hair Styling
-                    </option>
+                    <option value="Hair Styling">Hair Styling</option>
 
-                    <option>
-                        Nail Care
-                    </option>
+                    <option value="Nail Care">Nail Care</option>
 
-                    <option>
-                        Makeup
-                    </option>
+                    <option value="Makeup">Makeup</option>
 
-                    <option>
-                        Facial Treatment
-                    </option>
+                    <option value="Facial Treatment">Facial Treatment</option>
 
                 </select>
 
@@ -1569,11 +1625,22 @@ footer a:hover{
 
             <div class="form-group">
 
-                <label>
-                    DATE
-                </label>
+                <label>DATE</label>
 
-                <input type="date">
+                <input id="appointmentDate" type="date">
+
+            </div>
+
+
+            <div class="time-picker" id="timePicker">
+
+                <label class="time-picker-label">AVAILABLE TIME</label>
+
+                <div class="time-grid" id="timeGrid"></div>
+
+                <div class="time-status" id="timeStatus">
+                    Select a time for your appointment.
+                </div>
 
             </div>
 
@@ -1582,6 +1649,7 @@ footer a:hover{
 
         <button
             class="booking-button"
+            id="bookingButton"
             onclick="startBooking()"
         >
             CONTINUE TO AVAILABLE TIMES →
@@ -1760,19 +1828,19 @@ footer a:hover{
             <h4>Opening Hours</h4>
 
             <a href="#">
-                Monday — Friday
+                Every Day
             </a>
 
             <a href="#">
-                09:00 — 19:00
+                11:00 — 00:00
             </a>
 
             <a href="#">
-                Saturday
+                
             </a>
 
             <a href="#">
-                10:00 — 18:00
+                
             </a>
 
         </div>
@@ -1793,64 +1861,230 @@ footer a:hover{
 
 <script>
 
-/* =========================
-   SCROLL REVEAL
-========================= */
-
-const elements =
-document.querySelectorAll(".reveal");
+const elements = document.querySelectorAll(".reveal");
 
 function reveal(){
-
     elements.forEach(element => {
-
-        const position =
-        element.getBoundingClientRect().top;
-
+        const position = element.getBoundingClientRect().top;
         if(position < window.innerHeight - 80){
-
             element.classList.add("show");
-
         }
-
     });
-
 }
 
-window.addEventListener("scroll",reveal);
-
+window.addEventListener("scroll", reveal);
 reveal();
 
 
 /* =========================
-   BOOKING TEMPORARY
+   BOOKING SYSTEM
+   11:00 → 00:00
+   Each appointment = 1h30
+   3 staff members per time slot
 ========================= */
 
 const SUPABASE_URL = "https://rrxtxulmuojyxhomnhbj.supabase.co";
-
 const SUPABASE_KEY = "sb_publishable_2xZkfkOKCkKe6mS_n0b4YQ_lzCh-2NJ";
 
+const TIME_SLOTS = [
+    "11:00:00",
+    "12:30:00",
+    "14:00:00",
+    "15:30:00",
+    "17:00:00",
+    "18:30:00",
+    "20:00:00",
+    "21:30:00"
+];
 
-async function startBooking() {
-
-    const name = document.querySelector(
-        'input[placeholder="Your full name"]'
-    ).value.trim();
-
-    const phone = document.querySelector(
-        'input[placeholder="+212 ..."]'
-    ).value.trim();
-
-    const service = document.querySelector(
-        '.form-group select'
-    ).value;
-
-    const date = document.querySelector(
-        'input[type="date"]'
-    ).value;
+let selectedTime = "";
 
 
-    if (!name || !phone || service === "Select a service" || !date) {
+const dateInput = document.getElementById("appointmentDate");
+const serviceInput = document.getElementById("serviceSelect");
+const timePicker = document.getElementById("timePicker");
+const timeGrid = document.getElementById("timeGrid");
+const timeStatus = document.getElementById("timeStatus");
+const bookingButton = document.getElementById("bookingButton");
+
+
+/* Do not allow booking dates in the past */
+const today = new Date();
+const todayString =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+dateInput.min = todayString;
+
+
+dateInput.addEventListener("change", loadAvailableTimes);
+serviceInput.addEventListener("change", () => {
+    if(dateInput.value){
+        loadAvailableTimes();
+    }
+});
+
+
+function formatTime(time){
+    const parts = time.split(":");
+    let hour = Number(parts[0]);
+    const minutes = parts[1];
+
+    const suffix = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12;
+
+    return `${hour}:${minutes} ${suffix}`;
+}
+
+
+async function loadAvailableTimes(){
+
+    const date = dateInput.value;
+
+    selectedTime = "";
+    bookingButton.innerText =
+        "SELECT AN AVAILABLE TIME →";
+
+    if(!date){
+        timePicker.classList.remove("show");
+        return;
+    }
+
+    timePicker.classList.add("show");
+    timeGrid.innerHTML = "";
+    timeStatus.innerText = "Loading available times...";
+
+
+    try{
+
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/rpc/get_available_times`,
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "apikey":SUPABASE_KEY
+                },
+                body:JSON.stringify({
+                    p_date:date
+                })
+            }
+        );
+
+
+        if(!response.ok){
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+
+
+        const data = await response.json();
+
+
+        if(!Array.isArray(data)){
+            throw new Error("Invalid availability response.");
+        }
+
+
+        timeGrid.innerHTML = "";
+
+
+        data.forEach(slot => {
+
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "time-slot";
+
+            const booked = Number(slot.booked_count || 0);
+            const available = Number(slot.available_count || 0);
+
+            button.innerText = formatTime(slot.appointment_time);
+
+            if(available <= 0){
+
+                button.disabled = true;
+                button.title = "Fully booked";
+
+            }else{
+
+                button.addEventListener("click", () => {
+
+                    document
+                        .querySelectorAll(".time-slot")
+                        .forEach(item =>
+                            item.classList.remove("selected")
+                        );
+
+                    button.classList.add("selected");
+
+                    selectedTime = slot.appointment_time;
+
+                    timeStatus.innerText =
+                        `${formatTime(slot.appointment_time)} — ${available} of 3 places available`;
+
+                    bookingButton.innerText =
+                        "CONFIRM APPOINTMENT →";
+                });
+            }
+
+            timeGrid.appendChild(button);
+        });
+
+
+        const availableSlots = data.filter(
+            slot => Number(slot.available_count || 0) > 0
+        ).length;
+
+
+        if(availableSlots === 0){
+
+            timeStatus.innerText =
+                "No appointments available for this date.";
+
+            bookingButton.innerText =
+                "NO AVAILABLE TIMES";
+
+        }else{
+
+            timeStatus.innerText =
+                "Choose an available time. Each time can accept up to 3 clients.";
+
+        }
+
+
+    }catch(error){
+
+        console.error(error);
+
+        timeStatus.innerText =
+            "Could not load available times.";
+
+        alert(
+            "Supabase Error: " +
+            (error?.message || error || "Unknown error")
+        );
+    }
+}
+
+
+async function startBooking(){
+
+    const name =
+        document.getElementById("customerName").value.trim();
+
+    const phone =
+        document.getElementById("customerPhone").value.trim();
+
+    const service =
+        serviceInput.value;
+
+    const date =
+        dateInput.value;
+
+
+    if(!name || !phone || !service || !date){
 
         alert("Please complete all fields.");
 
@@ -1858,89 +2092,83 @@ async function startBooking() {
     }
 
 
-    const button = document.querySelector(
-        ".booking-button"
-    );
+    if(!selectedTime){
 
-    button.disabled = true;
+        alert("Please select an available appointment time.");
 
-    button.innerText = "SAVING...";
-
-
-    // Temporary test time
-    const appointmentTime = "10:00:00";
+        return;
+    }
 
 
-    try {
+    bookingButton.disabled = true;
+    bookingButton.innerText = "CONFIRMING...";
+
+
+    try{
 
         const response = await fetch(
             `${SUPABASE_URL}/rest/v1/appointments`,
             {
-                method: "POST",
+                method:"POST",
 
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_KEY,
-                    "Prefer": "return=minimal"
+                headers:{
+                    "Content-Type":"application/json",
+                    "apikey":SUPABASE_KEY,
+                    "Prefer":"return=minimal"
                 },
 
-                body: JSON.stringify({
-
-                    customer_name: name,
-                    phone: phone,
-                    service: service,
-                    appointment_date: date,
-                    appointment_time: appointmentTime,
-                    status: "pending"
-
+                body:JSON.stringify({
+                    customer_name:name,
+                    phone:phone,
+                    service:service,
+                    appointment_date:date,
+                    appointment_time:selectedTime,
+                    status:"pending"
                 })
             }
         );
 
 
-        if (!response.ok) {
+        if(!response.ok){
 
-            const error = await response.text();
+            const errorText = await response.text();
 
-            console.error(error);
-
-            throw new Error(error);
+            throw new Error(errorText);
         }
 
 
         alert(
-            "Appointment received successfully! 💕"
+            "Appointment confirmed successfully! 💕"
         );
 
 
-        document.querySelector(
-            'input[placeholder="Your full name"]'
-        ).value = "";
+        document.getElementById("customerName").value = "";
+        document.getElementById("customerPhone").value = "";
+        serviceInput.value = "";
+        dateInput.value = "";
 
-        document.querySelector(
-            'input[placeholder="+212 ..."]'
-        ).value = "";
+        selectedTime = "";
 
-        document.querySelector(
-            'input[type="date"]'
-        ).value = "";
+        timePicker.classList.remove("show");
+        timeGrid.innerHTML = "";
+
+        bookingButton.innerText =
+            "CONTINUE TO AVAILABLE TIMES →";
 
 
-    } catch (error) {
+    }catch(error){
 
         console.error(error);
 
         alert(
-            "Supabase Error: " + (error?.message || error || "Unknown error")
+            "Booking Error: " +
+            (error?.message || error || "Unknown error")
         );
 
     }
 
 
-    button.disabled = false;
-
-    button.innerText =
-        "CONTINUE TO AVAILABLE TIMES →";
+    bookingButton.disabled = false;
 
 }
 
