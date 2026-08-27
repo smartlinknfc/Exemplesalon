@@ -1823,7 +1823,7 @@ reveal();
 
 
 /* =========================
-   BOOKING TEMPORARY
+   BOOKING
 ========================= */
 
 const SUPABASE_URL = "https://rrxtxulmuojyxhomnhbj.supabase.co";
@@ -1881,7 +1881,6 @@ async function startBooking() {
                 headers: {
                     "Content-Type": "application/json",
                     "apikey": SUPABASE_KEY,
-                    "Authorization": `Bearer ${SUPABASE_KEY}`,
                     "Prefer": "return=representation"
                 },
 
