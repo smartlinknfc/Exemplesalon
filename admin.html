@@ -153,105 +153,11 @@ async function changeStaff(id, staff, service){
   load();
  }
 }
-function formatCalendarDate(d){
-  return d.toISOString().slice(0,10);
-}
-
 function renderCalendar(rows){
-  const view = $("calendarView")?.value || "weekly";
-  const customDate = $("calendarDate")?.value || "";
-
-  let baseDate = new Date();
-  if(view === "custom" && customDate){
-    baseDate = new Date(customDate + "T12:00:00");
-  }
-
-  let dates = [];
-
-  if(view === "today"){
-    dates = [baseDate];
-  } else if(view === "custom"){
-    dates = [baseDate];
-  } else {
-    // Current week: Monday -> Sunday
-    const day = baseDate.getDay();
-    const diff = day === 0 ? -6 : 1 - day;
-    const monday = new Date(baseDate);
-    monday.setDate(baseDate.getDate() + diff);
-    monday.setHours(12,0,0,0);
-
-    for(let i=0;i<7;i++){
-      const d = new Date(monday);
-      d.setDate(monday.getDate()+i);
-      dates.push(d);
-    }
-  }
-
-  const container = $("calendarGrid");
-  if(!container) return;
-
-  container.innerHTML = "";
-
-  dates.forEach(d=>{
-    const dateKey = formatCalendarDate(d);
-    const dayRows = rows
-      .filter(a => a.appointment_date === dateKey)
-      .sort((a,b)=>(a.appointment_time||"").localeCompare(b.appointment_time||""));
-
-    const col = document.createElement("div");
-    col.className = "calendar-day";
-
-    const dayName = d.toLocaleDateString("en-US",{weekday:"short"}).toUpperCase();
-    const dayLabel = d.toLocaleDateString("en-US",{day:"2-digit",month:"short"});
-
-    col.innerHTML = `
-      <div class="calendar-day-head">
-        <span>${dayName}</span>
-        <strong>${dayLabel}</strong>
-      </div>
-      <div class="calendar-day-body">
-        ${dayRows.length
-          ? dayRows.map(a=>`
-            <div class="calendar-item">
-              <strong>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.service||"")}</strong>
-              <small>${esc(a.customer_name||"")} · ${esc(a.staff_member||"")}</small>
-            </div>
-          `).join("")
-          : `<div class="no-appointments">No appointments</div>`
-        }
-      </div>
-    `;
-
-    container.appendChild(col);
-  });
-
-  // Update heading according to the selected view.
-  const heading = document.querySelector("h2");
-  if(heading && heading.textContent.trim() === "Weekly Calendar"){
-    heading.textContent =
-      view === "today" ? "Today"
-      : view === "custom" ? "Selected Day"
-      : "Weekly Calendar";
-  }
+ const start=monday(todayLocal()),days=Array.from({length:7},(_,i)=>addDays(start,i));$("week").innerHTML="";
+ days.forEach(ds=>{const box=document.createElement("div");box.className="day"+(ds===todayLocal()?" today":"");
+ const dayRows=rows.filter(a=>a.appointment_date===ds);box.innerHTML=`<div class="day-head"><small>${new Date(ds+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"})}</small><strong>${fmt(ds)}</strong></div><div class="day-list">${dayRows.length?dayRows.map(a=>`<div class="event"><strong>${esc((a.appointment_time||"").slice(0,5))} · ${esc(a.service||"")}</strong><span>${esc(a.customer_name||"")} · ${esc(a.status||"pending")}</span></div>`).join(""):'<div class="no-event">No appointments</div>'}</div>`;$("week").appendChild(box)})
 }
-
-function setupCalendarControls(){
-  const view = $("calendarView");
-  const date = $("calendarDate");
-  if(!view || !date) return;
-
-  const update = ()=>{
-    date.style.display = view.value === "custom" ? "block" : "none";
-    if(view.value === "custom" && !date.value){
-      date.value = new Date().toISOString().slice(0,10);
-    }
-    load();
-  };
-
-  view.addEventListener("change", update);
-  date.addEventListener("change", ()=>load());
-}
-
 function renderStaff(rows){
  const serviceStaff={
   "Hair Styling":["A1","A2","A3"],
@@ -296,8 +202,6 @@ $("logoutBtn").onclick=async()=>{localStorage.removeItem("elegance_admin_session
 $("refreshBtn").onclick=load;$("statusFilter").onchange=load;
 $("dateMode").onchange=()=>{$("dateFilter").classList.toggle("hidden",$("dateMode").value!=="specific");if($("dateMode").value==="specific"&&!$("dateFilter").value)$("dateFilter").value=todayLocal();load()};
 $("dateFilter").onchange=load;showDashboard();
-
-setupCalendarControls();
 </script>
 </body>
 </html>
