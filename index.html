@@ -1881,7 +1881,7 @@ async function startBooking() {
                 headers: {
                     "Content-Type": "application/json",
                     "apikey": SUPABASE_KEY,
-                    "Prefer": "return=representation"
+                    "Prefer": "return=minimal"
                 },
 
                 body: JSON.stringify({
@@ -1931,7 +1931,7 @@ async function startBooking() {
         console.error(error);
 
         alert(
-            "Something went wrong. Please try again."
+            "Supabase Error: " + (error?.message || error || "Unknown error")
         );
 
     }
