@@ -2,296 +2,149 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ÉLÉGANCE — Admin Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"DM Sans",sans-serif;background:#faf5f2;color:#382d2b}
-button,input,select{font:inherit}
-.hidden{display:none!important}
-.login-page{min-height:100vh;display:grid;place-items:center;padding:25px;background:linear-gradient(135deg,#fffaf8,#f4dfdc)}
-.login-card{width:min(430px,100%);background:#fff;padding:42px;border-radius:14px;box-shadow:0 25px 70px rgba(60,40,40,.12)}
-.brand{text-align:center;margin-bottom:30px}
-.brand h1{font:600 32px "Playfair Display",serif;letter-spacing:5px}
-.brand p{font-size:10px;letter-spacing:4px;margin-top:6px;color:#c97d7e}
-.login-card label{display:block;font-size:11px;font-weight:700;margin:17px 0 8px}
-.login-card input{width:100%;height:48px;border:1px solid #e4d9d5;border-radius:5px;padding:0 14px;outline:none}
-.login-card input:focus{border-color:#c97d7e}
-.primary{width:100%;height:50px;border:0;border-radius:5px;background:#c97d7e;color:#fff;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:22px}
-.primary:disabled{opacity:.6}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:"DM Sans",sans-serif;background:#faf5f2;color:#382d2b}button,input,select{font:inherit}
+.hidden{display:none!important}.login-page{min-height:100vh;display:grid;place-items:center;padding:25px;background:linear-gradient(135deg,#fffaf8,#f4dfdc)}
+.login-card{width:min(430px,100%);background:#fff;padding:42px;border-radius:14px;box-shadow:0 25px 70px #3c28281f}.brand{text-align:center;margin-bottom:30px}
+.brand h1{font:600 32px "Playfair Display";letter-spacing:5px}.brand p,.topbar span{font-size:10px;letter-spacing:4px;color:#c97d7e}
+.login-card label{display:block;font-size:11px;font-weight:700;margin:17px 0 8px}.login-card input{width:100%;height:48px;border:1px solid #e4d9d5;border-radius:5px;padding:0 14px;outline:0}
+.primary,.refresh{border:0;border-radius:5px;background:#c97d7e;color:#fff;font-weight:700;cursor:pointer}.primary{width:100%;height:50px;letter-spacing:1px;margin-top:22px}
 .error{margin-top:14px;color:#a94442;background:#fbeaea;padding:12px;border-radius:5px;font-size:12px}
-.dashboard{min-height:100vh}
 .topbar{height:78px;background:#fff;border-bottom:1px solid #eadfdb;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:5}
-.topbar h1{font:600 24px "Playfair Display",serif;letter-spacing:2px}
-.topbar span{font-size:10px;letter-spacing:3px;color:#c97d7e}
-.logout{border:1px solid #e1d4d0;background:#fff;border-radius:5px;padding:10px 16px;cursor:pointer}
-.container{width:min(1200px,90%);margin:35px auto}
-.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:25px}
-.toolbar-left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.date-input,.filter{height:44px;border:1px solid #dfd2ce;border-radius:5px;background:#fff;padding:0 12px}
-.refresh{height:44px;padding:0 18px;border:0;border-radius:5px;background:#c97d7e;color:#fff;cursor:pointer}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:25px}
-.stat{background:#fff;border:1px solid #eadfdb;border-radius:8px;padding:20px}
-.stat b{display:block;font:600 30px "Playfair Display",serif}
-.stat small{color:#817773;font-size:11px}
-.table-wrap{background:#fff;border:1px solid #eadfdb;border-radius:8px;overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:850px}
-th,td{text-align:left;padding:15px;border-bottom:1px solid #eee5e1;font-size:12px}
-th{background:#faf5f2;font-size:10px;letter-spacing:1px}
-.status{display:inline-block;padding:6px 9px;border-radius:20px;font-size:10px;font-weight:700}
-.pending{background:#fff1d8;color:#986b17}.confirmed{background:#e5f5e9;color:#28743d}.cancelled{background:#f8e2e2;color:#a33e3e}
-.actions{display:flex;gap:6px}
-.action{border:0;border-radius:4px;padding:8px 10px;font-size:10px;cursor:pointer}
-.confirm{background:#e5f5e9;color:#28743d}.cancel{background:#f8e2e2;color:#a33e3e}
-.empty{text-align:center;padding:45px;color:#817773}
-@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}.topbar{padding:0 4%}.container{width:92%}}
-@media(max-width:500px){.cards{grid-template-columns:1fr}.topbar h1{font-size:18px}.brand h1{font-size:26px}}
+.topbar h1{font:600 24px "Playfair Display";letter-spacing:2px}.logout{border:1px solid #e1d4d0;background:#fff;border-radius:5px;padding:10px 16px;cursor:pointer}
+.container{width:min(1200px,90%);margin:35px auto}.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:25px}
+.toolbar-left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.date-input,.filter{height:44px;border:1px solid #dfd2ce;border-radius:5px;background:#fff;padding:0 12px}
+.refresh{height:44px;padding:0 18px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:25px}
+.stat{background:#fff;border:1px solid #eadfdb;border-radius:8px;padding:20px}.stat b{display:block;font:600 30px "Playfair Display"}.stat small{color:#817773;font-size:11px}
+.table-wrap{background:#fff;border:1px solid #eadfdb;border-radius:8px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{text-align:left;padding:15px;border-bottom:1px solid #eee5e1;font-size:12px}th{background:#faf5f2;font-size:10px;letter-spacing:1px}
+.status{display:inline-block;padding:6px 9px;border-radius:20px;font-size:10px;font-weight:700}.pending{background:#fff1d8;color:#986b17}.confirmed{background:#e5f5e9;color:#28743d}.cancelled{background:#f8e2e2;color:#a33e3e}
+.actions{display:flex;gap:6px}.action{border:0;border-radius:4px;padding:8px 10px;font-size:10px;cursor:pointer}.confirm{background:#e5f5e9;color:#28743d}.cancel{background:#f8e2e2;color:#a33e3e}
+.empty{text-align:center;padding:45px;color:#817773}.mode{font-weight:600}
+@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}.container{width:92%}}@media(max-width:500px){.cards{grid-template-columns:1fr}.topbar h1{font-size:18px}}
 </style>
 </head>
 <body>
 
 <div id="loginPage" class="login-page">
-  <div class="login-card">
-    <div class="brand">
-      <h1>ÉLÉGANCE</h1>
-      <p>ADMINISTRATION</p>
-    </div>
-    <form id="loginForm">
-      <label>EMAIL</label>
-      <input id="email" type="email" autocomplete="username" required placeholder="Admin email">
-      <label>PASSWORD</label>
-      <input id="password" type="password" autocomplete="current-password" required placeholder="Password">
-      <button id="loginBtn" class="primary" type="submit">LOGIN</button>
-      <div id="loginError" class="error hidden"></div>
-    </form>
-  </div>
+<div class="login-card">
+<div class="brand"><h1>ÉLÉGANCE</h1><p>ADMINISTRATION</p></div>
+<form id="loginForm">
+<label>EMAIL</label><input id="email" type="email" autocomplete="username" required placeholder="Admin email">
+<label>PASSWORD</label><input id="password" type="password" autocomplete="current-password" required placeholder="Password">
+<button id="loginBtn" class="primary" type="submit">LOGIN</button><div id="loginError" class="error hidden"></div>
+</form></div></div>
+
+<div id="dashboard" class="hidden">
+<header class="topbar"><div><h1>ÉLÉGANCE</h1><span>ADMIN DASHBOARD</span></div><button id="logoutBtn" class="logout">Logout</button></header>
+<main class="container">
+<div class="toolbar">
+<div class="toolbar-left">
+<select id="dateMode" class="filter">
+<option value="all">All dates</option><option value="today">Today</option><option value="specific">Specific date</option>
+</select>
+<input id="dateFilter" class="date-input hidden" type="date">
+<select id="statusFilter" class="filter">
+<option value="all">All statuses</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option>
+</select>
+</div><button id="refreshBtn" class="refresh">↻ Refresh</button>
 </div>
 
-<div id="dashboard" class="dashboard hidden">
-  <header class="topbar">
-    <div>
-      <h1>ÉLÉGANCE</h1>
-      <span>ADMIN DASHBOARD</span>
-    </div>
-    <button id="logoutBtn" class="logout">Logout</button>
-  </header>
+<section class="cards">
+<div class="stat"><b id="totalCount">0</b><small>Total appointments</small></div>
+<div class="stat"><b id="pendingCount">0</b><small>Pending</small></div>
+<div class="stat"><b id="confirmedCount">0</b><small>Confirmed</small></div>
+<div class="stat"><b id="todayCount">0</b><small>Today</small></div>
+</section>
 
-  <main class="container">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <input id="dateFilter" class="date-input" type="date">
-        <select id="statusFilter" class="filter">
-          <option value="all">All statuses</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </div>
-      <button id="refreshBtn" class="refresh">↻ Refresh</button>
-    </div>
-
-    <section class="cards">
-      <div class="stat"><b id="totalCount">0</b><small>Total appointments</small></div>
-      <div class="stat"><b id="pendingCount">0</b><small>Pending</small></div>
-      <div class="stat"><b id="confirmedCount">0</b><small>Confirmed</small></div>
-      <div class="stat"><b id="todayCount">0</b><small>Selected day</small></div>
-    </section>
-
-    <section class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>DATE</th><th>TIME</th><th>CLIENT</th><th>PHONE</th><th>SERVICE</th><th>STATUS</th><th>ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody id="appointmentsBody"></tbody>
-      </table>
-      <div id="empty" class="empty hidden">No appointments found.</div>
-    </section>
-  </main>
-</div>
+<section class="table-wrap">
+<table><thead><tr><th>DATE</th><th>TIME</th><th>CLIENT</th><th>PHONE</th><th>SERVICE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+<tbody id="appointmentsBody"></tbody></table><div id="empty" class="empty hidden">No appointments found.</div>
+</section>
+</main></div>
 
 <script>
-const SUPABASE_URL = "https://rrxtxulmuojyxhomnhbj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_2xZkfkOKCkKe6mS_n0b4YQ_lzCh-2NJ";
+const SUPABASE_URL="https://rrxtxulmuojyxhomnhbj.supabase.co";
+const SUPABASE_KEY="sb_publishable_2xZkfkOKCkKe6mS_n0b4YQ_lzCh-2NJ";
+const $=id=>document.getElementById(id);
 
-const loginPage = document.getElementById("loginPage");
-const dashboard = document.getElementById("dashboard");
-const loginForm = document.getElementById("loginForm");
-const loginError = document.getElementById("loginError");
-const loginBtn = document.getElementById("loginBtn");
-const dateFilter = document.getElementById("dateFilter");
-const statusFilter = document.getElementById("statusFilter");
-const body = document.getElementById("appointmentsBody");
-const empty = document.getElementById("empty");
-
-function todayLocal(){
-  const d = new Date();
-  const local = new Date(d.getTime() - d.getTimezoneOffset()*60000);
-  return local.toISOString().slice(0,10);
-}
-dateFilter.value = todayLocal();
-
-async function supabaseAuth(path, options={}){
-  const response = await fetch(`${SUPABASE_URL}/auth/v1/${path}`, {
-    ...options,
-    headers:{
-      "Content-Type":"application/json",
-      "apikey":SUPABASE_KEY,
-      ...(options.headers||{})
-    }
-  });
-  const data = await response.json().catch(()=>({}));
-  if(!response.ok) throw new Error(data.msg || data.message || data.error_description || "Authentication error");
-  return data;
-}
-
-function sessionHeaders(){
-  const session = JSON.parse(localStorage.getItem("elegance_admin_session") || "null");
-  return {
-    "Content-Type":"application/json",
-    "apikey":SUPABASE_KEY,
-    "Authorization":`Bearer ${session.access_token}`
-  };
-}
+function todayLocal(){const d=new Date(),x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,10)}
+function getSession(){return JSON.parse(localStorage.getItem("elegance_admin_session")||"null")}
+function authHeaders(){const s=getSession();return {"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":`Bearer ${s.access_token}`}}
 
 async function login(email,password){
-  const data = await supabaseAuth("token?grant_type=password",{
-    method:"POST",
-    body:JSON.stringify({email,password})
-  });
-  localStorage.setItem("elegance_admin_session",JSON.stringify(data));
-  showDashboard();
+ const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({email,password})});
+ const d=await r.json().catch(()=>({})); if(!r.ok)throw Error(d.msg||d.message||d.error_description||"Login failed");
+ localStorage.setItem("elegance_admin_session",JSON.stringify(d)); showDashboard();
 }
+function showLogin(){$("dashboard").classList.add("hidden");$("loginPage").classList.remove("hidden")}
+function showDashboard(){if(!getSession()?.access_token)return showLogin();$("loginPage").classList.add("hidden");$("dashboard").classList.remove("hidden");loadAppointments()}
 
-function showDashboard(){
-  const session = JSON.parse(localStorage.getItem("elegance_admin_session") || "null");
-  if(!session?.access_token){showLogin();return;}
-  loginPage.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-  loadAppointments();
-}
-
-function showLogin(){
-  dashboard.classList.add("hidden");
-  loginPage.classList.remove("hidden");
+function currentFilter(){
+ const mode=$("dateMode").value;
+ if(mode==="today")return todayLocal();
+ if(mode==="specific")return $("dateFilter").value;
+ return null;
 }
 
 async function loadAppointments(){
-  body.innerHTML = "";
-  empty.classList.add("hidden");
-  const selectedDate = dateFilter.value;
-  const status = statusFilter.value;
-
-  let url = `${SUPABASE_URL}/rest/v1/appointments?select=id,customer_name,phone,service,appointment_date,appointment_time,status&order=appointment_date.asc,appointment_time.asc`;
-  if(selectedDate) url += `&appointment_date=eq.${encodeURIComponent(selectedDate)}`;
-  if(status !== "all") url += `&status=eq.${encodeURIComponent(status)}`;
-
-  try{
-    const response = await fetch(url,{headers:sessionHeaders()});
-    const data = await response.json().catch(()=>[]);
-    if(response.status === 401){
-      localStorage.removeItem("elegance_admin_session");
-      showLogin();
-      throw new Error("Session expired. Please log in again.");
-    }
-    if(!response.ok) throw new Error(data.message || data.hint || "Could not load appointments.");
-    renderAppointments(data);
-    await loadStats();
-  }catch(error){
-    body.innerHTML = `<tr><td colspan="7" style="color:#a33e3e;padding:25px">${escapeHtml(error.message)}</td></tr>`;
-  }
+ $("appointmentsBody").innerHTML="";$("empty").classList.add("hidden");
+ let url=`${SUPABASE_URL}/rest/v1/appointments?select=id,customer_name,phone,service,appointment_date,appointment_time,status&order=appointment_date.asc,appointment_time.asc`;
+ const date=currentFilter(),status=$("statusFilter").value;
+ if(date)url+=`&appointment_date=eq.${encodeURIComponent(date)}`;
+ if(status!=="all")url+=`&status=eq.${encodeURIComponent(status)}`;
+ try{
+  const r=await fetch(url,{headers:authHeaders()});const d=await r.json().catch(()=>[]);
+  if(r.status===401){localStorage.removeItem("elegance_admin_session");showLogin();throw Error("Session expired. Please log in again.")}
+  if(!r.ok)throw Error(d.message||d.hint||"Could not load appointments.");
+  render(d);await stats();
+ }catch(e){$("appointmentsBody").innerHTML=`<tr><td colspan="7" style="color:#a33e3e;padding:25px">${escapeHtml(e.message)}</td></tr>`}
 }
 
-async function loadStats(){
-  const headers = sessionHeaders();
-  const queries = [
-    ["totalCount",""],
-    ["pendingCount","&status=eq.pending"],
-    ["confirmedCount","&status=eq.confirmed"],
-    ["todayCount",`&appointment_date=eq.${encodeURIComponent(dateFilter.value)}`]
-  ];
-  for(const [id,query] of queries){
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/appointments?select=id${query}`,{
-      headers:{...headers,"Prefer":"count=exact"}
-    });
-    const count = r.headers.get("content-range");
-    document.getElementById(id).textContent = count && count.includes("/") ? count.split("/")[1] : (await r.json()).length;
-  }
+function render(rows){
+ if(!rows.length){$("empty").classList.remove("hidden");return}
+ rows.forEach(a=>{
+  const st=(a.status||"pending").toLowerCase(),tr=document.createElement("tr");
+  tr.innerHTML=`<td>${escapeHtml(a.appointment_date||"")}</td><td>${escapeHtml((a.appointment_time||"").slice(0,5))}</td>
+  <td><strong>${escapeHtml(a.customer_name||"")}</strong></td><td>${escapeHtml(a.phone||"")}</td><td>${escapeHtml(a.service||"")}</td>
+  <td><span class="status ${st}">${escapeHtml(st)}</span></td><td class="actions">
+  ${st!=="confirmed"&&st!=="cancelled"?`<button class="action confirm" onclick="updateStatus(${a.id},'confirmed')">Confirm</button>`:""}
+  ${st!=="cancelled"?`<button class="action cancel" onclick="updateStatus(${a.id},'cancelled')">Cancel</button>`:""}</td>`;
+  $("appointmentsBody").appendChild(tr);
+ });
 }
 
-function renderAppointments(rows){
-  if(!rows.length){empty.classList.remove("hidden");return;}
-  for(const a of rows){
-    const tr=document.createElement("tr");
-    const status=(a.status||"pending").toLowerCase();
-    tr.innerHTML=`
-      <td>${escapeHtml(a.appointment_date||"")}</td>
-      <td>${escapeHtml((a.appointment_time||"").slice(0,5))}</td>
-      <td><strong>${escapeHtml(a.customer_name||"")}</strong></td>
-      <td>${escapeHtml(a.phone||"")}</td>
-      <td>${escapeHtml(a.service||"")}</td>
-      <td><span class="status ${status}">${escapeHtml(status)}</span></td>
-      <td class="actions">
-        ${status!=="confirmed" && status!=="cancelled" ? `<button class="action confirm" onclick="updateStatus(${a.id},'confirmed')">Confirm</button>`:""}
-        ${status!=="cancelled" ? `<button class="action cancel" onclick="updateStatus(${a.id},'cancelled')">Cancel</button>`:""}
-      </td>`;
-    body.appendChild(tr);
-  }
+async function stats(){
+ const h={...authHeaders(),"Prefer":"count=exact"};
+ async function count(extra=""){const r=await fetch(`${SUPABASE_URL}/rest/v1/appointments?select=id${extra}`,{headers:h});const cr=r.headers.get("content-range");if(cr&&cr.includes("/"))return Number(cr.split("/")[1]);const d=await r.json().catch(()=>[]);return d.length}
+ $("totalCount").textContent=await count();
+ $("pendingCount").textContent=await count("&status=eq.pending");
+ $("confirmedCount").textContent=await count("&status=eq.confirmed");
+ $("todayCount").textContent=await count(`&appointment_date=eq.${todayLocal()}`);
 }
 
 async function updateStatus(id,status){
-  if(!confirm(`Set this appointment to ${status}?`)) return;
-  try{
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/appointments?id=eq.${encodeURIComponent(id)}`,{
-      method:"PATCH",
-      headers:{...sessionHeaders(),"Prefer":"return=minimal"},
-      body:JSON.stringify({status})
-    });
-    if(!r.ok){
-      const e=await r.json().catch(()=>({}));
-      throw new Error(e.message || "Could not update appointment.");
-    }
-    loadAppointments();
-  }catch(e){alert(e.message);}
+ if(!confirm(`Set this appointment to ${status}?`))return;
+ try{
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/appointments?id=eq.${id}`,{method:"PATCH",headers:{...authHeaders(),"Prefer":"return=minimal"},body:JSON.stringify({status})});
+  if(!r.ok){const d=await r.json().catch(()=>({}));throw Error(d.message||"Could not update appointment.")}
+  loadAppointments();
+ }catch(e){alert(e.message)}
 }
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
-}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginError").classList.add("hidden");$("loginBtn").disabled=true;$("loginBtn").textContent="LOGGING IN...";
+try{await login($("email").value.trim(),$("password").value)}catch(e){$("loginError").textContent=e.message;$("loginError").classList.remove("hidden")}finally{$("loginBtn").disabled=false;$("loginBtn").textContent="LOGIN"}});
 
-loginForm.addEventListener("submit",async e=>{
-  e.preventDefault();
-  loginError.classList.add("hidden");
-  loginBtn.disabled=true;
-  loginBtn.textContent="LOGGING IN...";
-  try{
-    await login(document.getElementById("email").value.trim(),document.getElementById("password").value);
-  }catch(error){
-    loginError.textContent=error.message;
-    loginError.classList.remove("hidden");
-  }finally{
-    loginBtn.disabled=false;
-    loginBtn.textContent="LOGIN";
-  }
-});
-
-document.getElementById("logoutBtn").addEventListener("click",async()=>{
-  const session=JSON.parse(localStorage.getItem("elegance_admin_session")||"null");
-  if(session?.access_token){
-    await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:sessionHeaders()}).catch(()=>{});
-  }
-  localStorage.removeItem("elegance_admin_session");
-  showLogin();
-});
-
-document.getElementById("refreshBtn").addEventListener("click",loadAppointments);
-dateFilter.addEventListener("change",loadAppointments);
-statusFilter.addEventListener("change",loadAppointments);
-
+$("logoutBtn").onclick=async()=>{const s=getSession();if(s?.access_token)await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:"POST",headers:authHeaders()}).catch(()=>{});localStorage.removeItem("elegance_admin_session");showLogin()};
+$("refreshBtn").onclick=loadAppointments;$("statusFilter").onchange=loadAppointments;
+$("dateMode").onchange=()=>{$("dateFilter").classList.toggle("hidden",$("dateMode").value!=="specific");if($("dateMode").value==="specific"&&!$("dateFilter").value)$("dateFilter").value=todayLocal();loadAppointments()};
+$("dateFilter").onchange=loadAppointments;
 showDashboard();
 </script>
 </body>
